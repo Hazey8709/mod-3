@@ -12,8 +12,11 @@ router.get("/", (req, res, next) => {
 //! GET*ID
 //*  localhost:4000/:id
 router.get("/:id", (req, res, next) => {
+    const id = req.params.id;
+
     res.json({
         message: "Books -GET*ID-",
+        id: id,
     });
 });
 
@@ -28,24 +31,33 @@ router.post("/", (req, res, next) => {
 //! PUT
 //*  localhost:4000/:id
 router.put("/", (req, res, next) => {
+    const id = req.params.id;
+
     res.json({
         message: "Books -PUT-",
+        id: id,
     });
 });
 
 // //! PATCH
 // //*  localhost:4000/:id
 // router.patch("/", (req, res, next) => {
+//     const id = req.params.id;
+//
 //     res.json({
 //         message: "Books -PATCH-",
+//         id: id,
 //     });
 // });
 
 //! DELETE
 //*  localhost:4000/:id
 router.delete("/", (req, res, next) => {
+    const id = req.params.id;
+
     res.json({
         message: "Books -DELETE-",
+        id: id,
     });
 });
 

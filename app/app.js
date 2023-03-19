@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 const authorRoutes = require("../routes/authors");
 const bookRoutes = require("../routes/books");
 
@@ -60,4 +61,16 @@ app.use((error, req, res, next) => {
     });
 });
 
+//! Mongoose
+mongoose.connect(process.env.mongoDB);
+
 module.exports = app;
+
+// //! Mongoose  NO-CALL BACK ALLOWED
+// mongoose.connect(process.env.mongoDB, (err) => {
+//     if (err) {
+//         console.error("Error: ", err.message);
+//     } else {
+//         console.log("connection success");
+//     }
+// });

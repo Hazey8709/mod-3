@@ -7,7 +7,7 @@ const router = express.Router();
 //*  localhost:4000/
 router.get("/", (req, res, next) => {
     res.json({
-        message: "Authors -GET-",
+        message: "Authors GET-All",
     });
 });
 
