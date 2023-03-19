@@ -38,7 +38,7 @@ router.post("/", (req, res, next) => {
             console.log(result);
             res.status(200).json({
                 message: "Book Saved",
-                Book: {
+                book: {
                     title: result.title,
                     author: result.author,
                     id: result.id,
