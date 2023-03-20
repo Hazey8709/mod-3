@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
-const Book = require("../models/books");
+const Book = require("../models/book");
 
 //! GET-ALL
 //*  localhost:4000/
@@ -26,7 +26,7 @@ router.get("/:id", (req, res, next) => {
 //*  localhost:4000/:id
 router.post("/", (req, res, next) => {
     const newBook = new Book({
-        id: mongoose.Types.ObjectId(),
+        _id: mongoose.Types.ObjectId(),
         title: req.body.title,
         author: req.body.author,
     });
