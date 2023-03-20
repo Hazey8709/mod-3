@@ -41,7 +41,7 @@ router.post("/", (req, res, next) => {
                 book: {
                     title: result.title,
                     author: result.author,
-                    id: result.id,
+                    id: result._id,
                     metadata: {
                         method: req.method,
                         host: req.hostname,
@@ -60,27 +60,62 @@ router.post("/", (req, res, next) => {
         });
 });
 
-//! PUT
-//*  localhost:4000/:id
-router.put("/", (req, res, next) => {
-    const id = req.params.id;
-
-    res.json({
-        message: "Books -PUT-",
-        id: id,
-    });
-});
-
-// //! PATCH
+// //! PUT
 // //*  localhost:4000/:id
-// router.patch("/", (req, res, next) => {
-//     const id = req.params.id;
-//
+// router.put("/", (req, res, next) => {
+//     const bookId = req.params.bookId;
+
 //     res.json({
-//         message: "Books -PATCH-",
-//         id: id,
+//         message: "Books -PUT-",
+//         id: bookId,
 //     });
 // });
+
+//! PATCH
+//*  localhost:4000/:id
+router.patch("/", (req, res, next) => {
+    const bookId = req.params.bookId;
+
+    const updatedBook = {
+        title: req.body.title,
+        author: req.body.author,
+    };
+
+    Book.updateOne(
+        {
+            _id: bookId,
+        },
+        {
+            $set: updatedBook,
+        }
+    )
+        .then((result) => {
+            res.status(200).json({
+                message: "updated Book",
+                book: {
+                    title: result.title,
+                    author: result.author,
+                    id: result._id,
+                },
+                metadata: {
+                    host: req.hostname,
+                    method: req.method,
+                },
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                error: {
+                    message: err.message,
+                },
+            });
+        });
+
+    // res.json({
+    //     message: "Books -PATCH-",
+    //     id: id,
+    // });
+});
 
 //! DELETE
 //*  localhost:4000/:id
