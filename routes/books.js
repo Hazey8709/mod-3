@@ -171,7 +171,7 @@ router.patch("/:bookId", (req, res, next) => {
 
 //! DELETE
 //*  localhost:4000/:id
-router.delete("/", (req, res, next) => {
+router.delete("/:id", (req, res, next) => {
     const id = req.params.id;
 
     Book.findByIdAndRemove(id)
