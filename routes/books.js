@@ -6,9 +6,36 @@ const Book = require("../models/book");
 //! GET-ALL
 //*  localhost:4000/
 router.get("/", (req, res, next) => {
-    res.json({
-        message: "Books -GET-",
-    });
+    Book.find()
+        .then((books) => {
+            res.status(200).json({
+                message: "All Books Fetched",
+                count: books.length,
+                books: books.map((book) => {
+                    return {
+                        title: book.title,
+                        author: book.author,
+                        id: book._id,
+                    };
+                }),
+                metadata: {
+                    host: req.hostname,
+                    method: req.method,
+                },
+            });
+        })
+        .catch((err) => {
+            console.error(err.message);
+            res.status(500).json({
+                error: {
+                    message: err.message,
+                },
+            });
+        });
+
+    // res.json({
+    //     message: "Books -GET-",
+    // });
 });
 
 //! GET*ID
@@ -16,10 +43,40 @@ router.get("/", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
     const id = req.params.id;
 
-    res.json({
-        message: "Books -GET*ID-",
-        id: id,
-    });
+    Book.findById(id)
+        .then((book) => {
+            if (book) {
+                res.status(200).json({
+                    message: "Book Fetched",
+                    book: {
+                        title: book.title,
+                        author: book.author,
+                        id: book._id,
+                    },
+                    metadata: {
+                        host: req.hostname,
+                        method: req.method,
+                    },
+                });
+            } else {
+                res.status(404).json({
+                    message: "No Book Found",
+                });
+            }
+        })
+        .catch((err) => {
+            console.error(err.message);
+            res.status(500).json({
+                error: {
+                    message: err.message,
+                },
+            });
+        });
+
+    // res.json({
+    //     message: "Books -GET*ID-",
+    //     id: id,
+    // });
 });
 
 //! POST
@@ -61,8 +118,8 @@ router.post("/", (req, res, next) => {
 });
 
 // //! PUT
-// //*  localhost:4000/:id
-// router.put("/", (req, res, next) => {
+// //*  localhost:4000/:bookId
+// router.put("/:bookId", (req, res, next) => {
 //     const bookId = req.params.bookId;
 
 //     res.json({
@@ -73,7 +130,7 @@ router.post("/", (req, res, next) => {
 
 //! PATCH
 //*  localhost:4000/:id
-router.patch("/", (req, res, next) => {
+router.patch("/:bookId", (req, res, next) => {
     const bookId = req.params.bookId;
 
     const updatedBook = {
@@ -91,7 +148,7 @@ router.patch("/", (req, res, next) => {
     )
         .then((result) => {
             res.status(200).json({
-                message: "updated Book",
+                message: "Updated Book",
                 book: {
                     title: result.title,
                     author: result.author,
@@ -110,11 +167,6 @@ router.patch("/", (req, res, next) => {
                 },
             });
         });
-
-    // res.json({
-    //     message: "Books -PATCH-",
-    //     id: id,
-    // });
 });
 
 //! DELETE
@@ -122,10 +174,42 @@ router.patch("/", (req, res, next) => {
 router.delete("/", (req, res, next) => {
     const id = req.params.id;
 
-    res.json({
-        message: "Books -DELETE-",
-        id: id,
-    });
+    Book.findByIdAndRemove(id)
+        .then((book) => {
+            if (book) {
+                res.status(200).json({
+                    message: "Book Deleted",
+                    book: {
+                        title: book.title,
+                        author: book.author,
+                        id: book._id,
+                    },
+                    metadata: {
+                        host: req.hostname,
+                        method: req.method,
+                    },
+                });
+            } else {
+                res.status(404).json({
+                    message: "No Book Found",
+                });
+            }
+        })
+        .catch((err) => {
+            console.error(err.message);
+            res.status(500).json({
+                error: {
+                    message: err.message,
+                },
+            });
+        });
+
+    // const id = req.params.id;
+
+    // res.json({
+    //     message: "Books -DELETE-",
+    //     id: id,
+    // });
 });
 
 module.exports = router;
