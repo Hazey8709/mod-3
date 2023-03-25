@@ -1,21 +1,23 @@
+//!   Routes/names.js
+
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
-const Book = require("../models/book");
+const Book = require("../models/name");
 
 //! GET-ALL
 //*  localhost:4000/
 router.get("/", (req, res, next) => {
-    Book.find()
-        .then((books) => {
+    Name.find()
+        .then((names) => {
             res.status(200).json({
-                message: "All Books Fetched",
-                count: books.length,
-                books: books.map((book) => {
+                message: "All Names Fetched",
+                count: names.length,
+                books: names.map((name) => {
                     return {
-                        title: book.title,
-                        author: book.author,
-                        id: book._id,
+                        title: name.title,
+                        desc: name.desc,
+                        id: name._id,
                     };
                 }),
                 metadata: {
@@ -39,15 +41,15 @@ router.get("/", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
     const id = req.params.id;
 
-    Book.findById(id)
-        .then((book) => {
-            if (book) {
+    Name.findById(id)
+        .then((name) => {
+            if (name) {
                 res.status(200).json({
-                    message: "Book Fetched",
-                    book: {
-                        title: book.title,
-                        author: book.author,
-                        id: book._id,
+                    message: "Name Fetched",
+                    name: {
+                        title: name.title,
+                        desc: name.desc,
+                        id: name._id,
                     },
                     metadata: {
                         host: req.hostname,
@@ -56,7 +58,7 @@ router.get("/:id", (req, res, next) => {
                 });
             } else {
                 res.status(404).json({
-                    message: "No Book Found",
+                    message: "No Name Found",
                 });
             }
         })
@@ -73,22 +75,22 @@ router.get("/:id", (req, res, next) => {
 //! POST
 //*  localhost:4000/:id
 router.post("/", (req, res, next) => {
-    const newBook = new Book({
+    const newName = new Name({
         _id: mongoose.Types.ObjectId(),
         title: req.body.title,
-        author: req.body.author,
+        desc: req.body.desc,
     });
 
     //! Write DB
-    newBook
+    newName
         .save()
         .then((result) => {
             console.log(result);
             res.status(200).json({
-                message: "Book Saved",
-                book: {
+                message: "Name Saved",
+                name: {
                     title: result.title,
-                    author: result.author,
+                    desc: result.desc,
                     id: result._id,
                     metadata: {
                         method: req.method,
@@ -109,40 +111,40 @@ router.post("/", (req, res, next) => {
 });
 
 // //! PUT
-// //*  localhost:4000/:bookId
-// router.put("/:bookId", (req, res, next) => {
-//     const bookId = req.params.bookId;
+// //*  localhost:4000/:id
+// router.put("/:id", (req, res, next) => {
+//     const id = req.params.id;
 
 //     res.json({
-//         message: "Books -PUT-",
-//         id: bookId,
+//         message: "Names -PUT-",
+//         id: id,
 //     });
 // });
 
 //! PATCH
 //*  localhost:4000/:id
-router.patch("/:bookId", (req, res, next) => {
-    const bookId = req.params.bookId;
+router.patch("/:id", (req, res, next) => {
+    const id = req.params.id;
 
-    const updatedBook = {
+    const updatedName = {
         title: req.body.title,
-        author: req.body.author,
+        desc: req.body.desc,
     };
 
-    Book.updateOne(
+    Name.updateOne(
         {
-            _id: bookId,
+            _id: id,
         },
         {
-            $set: updatedBook,
+            $set: updatedName,
         }
     )
         .then((result) => {
             res.status(200).json({
-                message: "Updated Book",
-                book: {
+                message: "Updated Name",
+                name: {
                     title: result.title,
-                    author: result.author,
+                    desc: result.desc,
                     id: result._id,
                 },
                 metadata: {
@@ -165,15 +167,15 @@ router.patch("/:bookId", (req, res, next) => {
 router.delete("/:id", (req, res, next) => {
     const id = req.params.id;
 
-    Book.findByIdAndRemove(id)
-        .then((book) => {
-            if (book) {
+    Name.findByIdAndRemove(id)
+        .then((name) => {
+            if (name) {
                 res.status(200).json({
-                    message: "Book Deleted",
-                    book: {
-                        title: book.title,
-                        author: book.author,
-                        id: book._id,
+                    message: "Name Deleted",
+                    name: {
+                        title: name.title,
+                        author: name.author,
+                        id: name._id,
                     },
                     metadata: {
                         host: req.hostname,
@@ -182,7 +184,7 @@ router.delete("/:id", (req, res, next) => {
                 });
             } else {
                 res.status(404).json({
-                    message: "No Book Found",
+                    message: "No Name Found",
                 });
             }
         })
