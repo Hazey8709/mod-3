@@ -13,7 +13,7 @@ router.get("/", (req, res, next) => {
             res.status(200).json({
                 message: "All Names Fetched",
                 count: names.length,
-                books: names.map((name) => {
+                names: names.map((name) => {
                     return {
                         title: name.title,
                         desc: name.desc,
