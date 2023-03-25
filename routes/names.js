@@ -3,7 +3,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
-const Book = require("../models/name");
+const Name = require("../models/name");
 
 //! GET-ALL
 //*  localhost:4000/
