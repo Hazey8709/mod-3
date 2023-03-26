@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const Pokemon = require("../models/pokemon");
+const Messages = require("../erMessages/messages");
 
 //! GET-ALL
 //*  localhost:4000/
@@ -9,7 +10,7 @@ router.get("/", (req, res, next) => {
     Pokemon.find()
         .then((pokemon) => {
             res.status(200).json({
-                message: "All Pokemon Fetched",
+                message: Messages.allPokemonFetched,
                 count: pokemon.length,
                 names: pokemon.map((pokemon) => {
                     return {
@@ -43,7 +44,7 @@ router.get("/:id", (req, res, next) => {
         .then((pokemon) => {
             if (pokemon) {
                 res.status(200).json({
-                    message: "Pokemon Fetched",
+                    message: Messages.pokemonFetched,
                     name: {
                         title: pokemon.title,
                         desc: pokemon.desc,
@@ -71,7 +72,7 @@ router.get("/:id", (req, res, next) => {
 });
 
 //! Post w/check
-//*  localhost:4000/:id
+//*  localhost:4000/
 router.post("/", (req, res, next) => {
     Pokemon.findOne({ title: req.body.title })
         .exec()
@@ -159,7 +160,7 @@ router.patch("/:id", (req, res, next) => {
     )
         .then((result) => {
             res.status(200).json({
-                message: "Updated Pokemon",
+                message: Messages.updatedPokemon,
                 pokemon: {
                     title: result.title,
                     desc: result.desc,
@@ -189,7 +190,7 @@ router.delete("/:id", (req, res, next) => {
         .then((pokemon) => {
             if (pokemon) {
                 res.status(200).json({
-                    message: "Pokemon Deleted",
+                    message: Messages.pokemonDeleted,
                     pokemon: {
                         title: pokemon.title,
                         author: pokemon.author,

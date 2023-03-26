@@ -66,7 +66,7 @@ app.use((error, req, res, next) => {
 });
 
 //! Mongoose
-mongoose.connect(process.env.mongoDBName);
+mongoose.connect(process.env.mongoDBPoke);
 
 module.exports = app;
 
