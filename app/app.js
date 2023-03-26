@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const authorRoutes = require("../routes/authors");
 const bookRoutes = require("../routes/books");
 const nameRoutes = require("../routes/names");
+const pokemonRoutes = require("../routes/pokemon");
 
 //! Morgan logging (middleware)
 app.use(morgan("dev"));
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
 app.use("/authors", authorRoutes);
 app.use("/books", bookRoutes);
 app.use("/names", nameRoutes);
+app.use("/pokemon", pokemonRoutes);
 
 //! Error Handling (middleware)
 app.use((req, res, next) => {
