@@ -72,34 +72,53 @@ router.get("/:id", (req, res, next) => {
         });
 });
 
-//! POST
+//! Post w/check
 //*  localhost:4000/:id
 router.post("/", (req, res, next) => {
-    const newName = new Name({
-        _id: mongoose.Types.ObjectId(),
-        title: req.body.title,
-        desc: req.body.desc,
-    });
-
-    //! Write DB
-    newName
-        .save()
-        .then((result) => {
-            console.log(result);
-            res.status(200).json({
-                message: "Name Saved",
-                name: {
-                    title: result.title,
-                    desc: result.desc,
-                    id: result._id,
-                    metadata: {
-                        method: req.method,
-                        host: req.hostname,
+    Name.findOne({ title: req.body.title })
+        .then((name) => {
+            if (name) {
+                // Name already exists, return error response
+                return res.status(409).json({
+                    error: {
+                        message: "Name already exists",
                     },
-                },
-            });
-        })
+                });
+            } else {
+                // Name does not exist, create and save new name
+                const newName = new Name({
+                    _id: mongoose.Types.ObjectId(),
+                    title: req.body.title,
+                    desc: req.body.desc,
+                });
 
+                newName
+                    .save()
+                    .then((result) => {
+                        console.log(result);
+                        res.status(200).json({
+                            message: "Name saved",
+                            name: {
+                                title: result.title,
+                                desc: result.desc,
+                                id: result._id,
+                                metadata: {
+                                    method: req.method,
+                                    host: req.hostname,
+                                },
+                            },
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err.message);
+                        res.status(500).json({
+                            error: {
+                                message: err.message,
+                            },
+                        });
+                    });
+            }
+        })
         .catch((err) => {
             console.error(err.message);
             res.status(500).json({
