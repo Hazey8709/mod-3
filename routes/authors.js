@@ -14,7 +14,8 @@ router.get("/", (req, res, next) => {
                 authors: authors.map((author) => {
                     return {
                         title: author.title,
-                        author: author.author,
+                        author: author,
+                        name: author.name,
                         id: author._id,
                     };
                 }),
@@ -40,19 +41,16 @@ router.get("/:id", (req, res, next) => {
     const id = req.params.id;
 
     Author.findById(id)
+        .select("name id")
+        .exec()
         .then((author) => {
             if (author) {
-                res.status(200).json({
+                res.status(201).json({
                     message: "Author Fetched",
-                    author: {
-                        title: author.title,
-                        author: author.author,
-                        id: author._id,
-                    },
-                    metadata: {
-                        host: req.hostname,
-                        method: req.method,
-                    },
+                    title: author.title,
+                    author: author,
+                    name: author.name,
+                    id: author._id,
                 });
             } else {
                 res.status(404).json({

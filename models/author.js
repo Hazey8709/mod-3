@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-const Book = require("../routes/books");
+// const Book = require("../routes/books");
 
 const authorSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     book: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Book,
+        ref: "Book",
         required: true,
     },
     name: {
