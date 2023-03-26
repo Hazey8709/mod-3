@@ -71,19 +71,20 @@ router.get("/:id", (req, res, next) => {
 });
 
 //! Post w/check
+//*  localhost:4000/
 router.post("/", (req, res, next) => {
     Book.findOne({ title: req.body.title, author: req.body.author })
         .exec()
         .then((book) => {
             if (book) {
-                // Book already exists, return error response
+                //* Book already exists, return error response
                 return res.status(409).json({
                     error: {
                         message: "Book already exists",
                     },
                 });
             } else {
-                // Book does not exist, create and save new book
+                //* Book does not exist, create and save new book
                 const newBook = new Book({
                     _id: mongoose.Types.ObjectId(),
                     title: req.body.title,
@@ -126,55 +127,6 @@ router.post("/", (req, res, next) => {
             });
         });
 });
-
-// //! POST
-// //*  localhost:4000/:id
-// router.post("/", (req, res, next) => {
-//     const newBook = new Book({
-//         _id: mongoose.Types.ObjectId(),
-//         title: req.body.title,
-//         author: req.body.author,
-//     });
-
-//     //! Write DB
-//     newBook
-//         .save()
-//         .then((result) => {
-//             console.log(result);
-//             res.status(200).json({
-//                 message: "Book Saved",
-//                 book: {
-//                     title: result.title,
-//                     author: result.author,
-//                     id: result._id,
-//                     metadata: {
-//                         method: req.method,
-//                         host: req.hostname,
-//                     },
-//                 },
-//             });
-//         })
-
-//         .catch((err) => {
-//             console.error(err.message);
-//             res.status(500).json({
-//                 error: {
-//                     message: err.message,
-//                 },
-//             });
-//         });
-// });
-
-// //! PUT
-// //*  localhost:4000/:bookId
-// router.put("/:bookId", (req, res, next) => {
-//     const bookId = req.params.bookId;
-
-//     res.json({
-//         message: "Books -PUT-",
-//         id: bookId,
-//     });
-// });
 
 //! PATCH
 //*  localhost:4000/:id
