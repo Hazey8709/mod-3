@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const Author = require("../models/author");
+const Messages = require("../erMessages/messages");
 
 //! GET-ALL
 //*  localhost:4000/
@@ -9,14 +10,11 @@ router.get("/", (req, res, next) => {
     Author.find()
         .then((authors) => {
             res.status(200).json({
-                message: "All Authors Fetched",
+                message: Messages.allAuthorsFetched,
                 count: authors.length,
                 authors: authors.map((author) => {
                     return {
-                        title: author.title,
                         author: author,
-                        name: author.name,
-                        id: author._id,
                     };
                 }),
                 metadata: {
@@ -41,20 +39,18 @@ router.get("/:id", (req, res, next) => {
     const id = req.params.id;
 
     Author.findById(id)
-        .select("name id")
+        //.select("name _id")
+        .populate("book", "title author")
         .exec()
         .then((author) => {
             if (author) {
                 res.status(201).json({
-                    message: "Author Fetched",
-                    title: author.title,
+                    message: Messages.authorFetched,
                     author: author,
-                    name: author.name,
-                    id: author._id,
                 });
             } else {
                 res.status(404).json({
-                    message: "No Author Found",
+                    message: "Author Not Found",
                 });
             }
         })
@@ -71,18 +67,21 @@ router.get("/:id", (req, res, next) => {
 //! Post w/check
 //*  localhost:4000/
 router.post("/", (req, res, next) => {
-    Author.findOne({ title: req.body.title, author: req.body.author })
+    Author.findOne({
+        title: req.body.title,
+        name: req.body.name,
+    })
         .exec()
         .then((author) => {
             if (author) {
                 //* author already exists, return error response
                 return res.status(409).json({
                     error: {
-                        message: "author already exists",
+                        message: "Author already exists",
                     },
                 });
             } else {
-                //* author does not exist, create and save new book
+                //* Author does not exist, create and save new book
                 const newAuthor = new Author({
                     _id: mongoose.Types.ObjectId(),
                     title: req.body.title,
@@ -95,7 +94,7 @@ router.post("/", (req, res, next) => {
                         console.log(result);
                         res.status(200).json({
                             message: "Author saved",
-                            author: {
+                            book: {
                                 title: result.title,
                                 author: result.author,
                                 id: result._id,
@@ -125,6 +124,64 @@ router.post("/", (req, res, next) => {
             });
         });
 });
+
+// //! Post w/check
+// //*  localhost:4000/
+// router.post("/", (req, res, next) => {
+//     Author.findOne({ title: req.body.title, author: req.body.author })
+//         .exec()
+//         .then((author) => {
+//             if (author) {
+//                 //* author already exists, return error response
+//                 return res.status(409).json({
+//                     error: {
+//                         message: "author already exists",
+//                     },
+//                 });
+//             } else {
+//                 //* author does not exist, create and save new book
+//                 const newAuthor = new Author({
+//                     _id: mongoose.Types.ObjectId(),
+//                     title: req.body.title,
+//                     author: req.body.author,
+//                 });
+
+//                 newAuthor
+//                     .save()
+//                     .then((result) => {
+//                         console.log(result);
+//                         res.status(200).json({
+//                             message: Messages.authorSaved,
+//                             author: {
+//                                 title: result.title,
+//                                 author: result.author,
+//                                 id: result._id,
+//                                 metadata: {
+//                                     method: req.method,
+//                                     host: req.hostname,
+//                                 },
+//                             },
+//                         });
+//                     })
+//                     .catch((err) => {
+//                         console.error(err.message);
+//                         res.status(500).json({
+//                             error: {
+//                                 message: err.message,
+//                             },
+//                         });
+//                     });
+//             }
+//         })
+//         .catch((err) => {
+//             console.error(err.message);
+//             res.status(500).json({
+//                 error: {
+//                     message: err.message,
+//                 },
+//             });
+//         });
+// });
 
 //! PATCH
 //*  localhost:4000/:id
