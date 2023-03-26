@@ -73,6 +73,7 @@ router.get("/:id", (req, res, next) => {
 //! Post w/check
 router.post("/", (req, res, next) => {
     Book.findOne({ title: req.body.title, author: req.body.author })
+        .exec()
         .then((book) => {
             if (book) {
                 // Book already exists, return error response

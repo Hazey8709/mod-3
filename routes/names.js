@@ -76,6 +76,7 @@ router.get("/:id", (req, res, next) => {
 //*  localhost:4000/:id
 router.post("/", (req, res, next) => {
     Name.findOne({ title: req.body.title })
+        .exec()
         .then((name) => {
             if (name) {
                 // Name already exists, return error response
